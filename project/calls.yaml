@@ -1,0 +1,245 @@
+project: /home/tom/github/cliKVM/remotebot
+generated_from: code2llm call graph analysis
+stats:
+  total_nodes: 15
+  total_edges: 10
+  modules_count: 3
+nodes:
+  automation.automation_cli.main:
+    name: main
+    module: automation.automation_cli
+    line: 181
+    cyclomatic_complexity: 14
+    calls_out: 22
+    calls_in: 0
+  automation.live_monitor.clear_logs:
+    name: clear_logs
+    module: automation.live_monitor
+    line: 290
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 0
+  automation.live_monitor.capture_vnc_screenshot:
+    name: capture_vnc_screenshot
+    module: automation.live_monitor
+    line: 80
+    cyclomatic_complexity: 5
+    calls_out: 13
+    calls_in: 3
+  automation.live_monitor.disconnect_vnc:
+    name: disconnect_vnc
+    module: automation.live_monitor
+    line: 214
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 0
+  automation.live_monitor.add_log:
+    name: add_log
+    module: automation.live_monitor
+    line: 48
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 21
+  automation.run_scenario.main:
+    name: main
+    module: automation.run_scenario
+    line: 150
+    cyclomatic_complexity: 5
+    calls_out: 16
+    calls_in: 0
+  automation.live_monitor.connect_vnc:
+    name: connect_vnc
+    module: automation.live_monitor
+    line: 183
+    cyclomatic_complexity: 3
+    calls_out: 15
+    calls_in: 0
+  automation.live_monitor.execute_all:
+    name: execute_all
+    module: automation.live_monitor
+    line: 401
+    cyclomatic_complexity: 6
+    calls_out: 30
+    calls_in: 0
+  automation.live_monitor.execute_step:
+    name: execute_step
+    module: automation.live_monitor
+    line: 318
+    cyclomatic_complexity: 11
+    calls_out: 38
+    calls_in: 0
+  automation.live_monitor.screenshot_worker:
+    name: screenshot_worker
+    module: automation.live_monitor
+    line: 117
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 0
+  automation.automation_cli.create_sample_config:
+    name: create_sample_config
+    module: automation.automation_cli
+    line: 151
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  automation.run_scenario.run_scenario:
+    name: run_scenario
+    module: automation.run_scenario
+    line: 25
+    cyclomatic_complexity: 21
+    calls_out: 47
+    calls_in: 1
+  automation.run_scenario.load_scenario:
+    name: load_scenario
+    module: automation.run_scenario
+    line: 19
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 2
+  automation.live_monitor.load_scenario:
+    name: load_scenario
+    module: automation.live_monitor
+    line: 63
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 1
+  automation.live_monitor.load_scenario_api:
+    name: load_scenario_api
+    module: automation.live_monitor
+    line: 155
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+edges:
+- caller: automation.live_monitor.screenshot_worker
+  callee: automation.live_monitor.capture_vnc_screenshot
+  call_type: resolved
+- caller: automation.live_monitor.load_scenario_api
+  callee: automation.live_monitor.load_scenario
+  call_type: resolved
+- caller: automation.live_monitor.connect_vnc
+  callee: automation.live_monitor.add_log
+  call_type: resolved
+- caller: automation.live_monitor.disconnect_vnc
+  callee: automation.live_monitor.add_log
+  call_type: resolved
+- caller: automation.live_monitor.clear_logs
+  callee: automation.live_monitor.add_log
+  call_type: resolved
+- caller: automation.live_monitor.execute_step
+  callee: automation.live_monitor.add_log
+  call_type: resolved
+- caller: automation.live_monitor.execute_all
+  callee: automation.live_monitor.add_log
+  call_type: resolved
+- caller: automation.automation_cli.main
+  callee: automation.automation_cli.create_sample_config
+  call_type: resolved
+- caller: automation.run_scenario.run_scenario
+  callee: automation.run_scenario.load_scenario
+  call_type: resolved
+- caller: automation.run_scenario.main
+  callee: automation.run_scenario.run_scenario
+  call_type: resolved
+modules:
+  automation.automation_cli:
+  - automation.automation_cli.create_sample_config
+  - automation.automation_cli.main
+  automation.live_monitor:
+  - automation.live_monitor.add_log
+  - automation.live_monitor.capture_vnc_screenshot
+  - automation.live_monitor.clear_logs
+  - automation.live_monitor.connect_vnc
+  - automation.live_monitor.disconnect_vnc
+  - automation.live_monitor.execute_all
+  - automation.live_monitor.execute_step
+  - automation.live_monitor.load_scenario
+  - automation.live_monitor.load_scenario_api
+  - automation.live_monitor.screenshot_worker
+  automation.run_scenario:
+  - automation.run_scenario.load_scenario
+  - automation.run_scenario.main
+  - automation.run_scenario.run_scenario
+entry_points:
+- automation.automation_cli.main
+- automation.cv_detection.CVDetector.__init__
+- automation.cv_detection.CVDetector.detect_buttons
+- automation.cv_detection.CVDetector.detect_dialog_box
+- automation.cv_detection.CVDetector.detect_edges
+- automation.cv_detection.CVDetector.detect_rectangles
+- automation.cv_detection.CVDetector.find_text_field
+- automation.cv_detection.CVDetector.find_unlock_button
+- automation.cv_detection.CVDetector.find_window_center
+- automation.cv_detection.CVDetector.get_screen_diagnostics
+- automation.cv_detection.CVDetector.is_screen_blank
+- automation.cv_detection.CVDetector.quick_analysis
+- automation.cv_detection.CVDetector.screenshot_to_cv
+- automation.cv_detection.CVDetector.set_debug
+- automation.cv_detection.CVDetector.template_match
+- automation.live_monitor.clear_logs
+- automation.live_monitor.connect_vnc
+- automation.live_monitor.disconnect_vnc
+- automation.live_monitor.download_logs
+- automation.live_monitor.execute_all
+- automation.live_monitor.execute_step
+- automation.live_monitor.get_logs
+- automation.live_monitor.get_screenshot
+- automation.live_monitor.get_status
+- automation.live_monitor.get_steps
+- automation.live_monitor.index
+- automation.live_monitor.list_scenarios
+- automation.live_monitor.load_scenario_api
+- automation.live_monitor.screenshot_worker
+- automation.live_monitor.video_feed
+- automation.remote_automation.AutomationEngine.__init__
+- automation.remote_automation.AutomationEngine.execute_dsl
+- automation.remote_automation.AutomationEngine.log
+- automation.remote_automation.AutomationEngine.save_screenshot
+- automation.remote_automation.OllamaVision.__init__
+- automation.remote_automation.OllamaVision.analyze_screen
+- automation.remote_automation.OllamaVision.encode_image
+- automation.remote_automation.OllamaVision.find_element
+- automation.remote_automation.RemoteController.__init__
+- automation.remote_automation.RemoteController._connect_rdp
+- automation.remote_automation.RemoteController._connect_spice
+- automation.remote_automation.RemoteController._connect_vnc
+- automation.remote_automation.RemoteController.capture_screen
+- automation.remote_automation.RemoteController.click
+- automation.remote_automation.RemoteController.connect
+- automation.remote_automation.RemoteController.disconnect
+- automation.remote_automation.RemoteController.key_press
+- automation.remote_automation.RemoteController.type_text
+- automation.remote_automation.main
+- automation.run_scenario.main
+- automation.screen_recorder.RecordingContext.__enter__
+- automation.screen_recorder.RecordingContext.__exit__
+- automation.screen_recorder.RecordingContext.__init__
+- automation.screen_recorder.ScreenRecorder.__init__
+- automation.screen_recorder.ScreenRecorder._pil_to_opencv
+- automation.screen_recorder.ScreenRecorder._recording_loop
+- automation.screen_recorder.ScreenRecorder.add_text_overlay
+- automation.screen_recorder.ScreenRecorder.start_recording
+- automation.screen_recorder.ScreenRecorder.stop_recording
+- automation.screen_recorder.record_test
+- monitoring_dashboard.Monitor.__init__
+- monitoring_dashboard.Monitor.check_novnc_port
+- monitoring_dashboard.Monitor.check_ollama_api
+- monitoring_dashboard.Monitor.check_vnc_port
+- monitoring_dashboard.Monitor.clear_screen
+- monitoring_dashboard.Monitor.display
+- monitoring_dashboard.Monitor.draw_container_section
+- monitoring_dashboard.Monitor.draw_footer
+- monitoring_dashboard.Monitor.draw_header
+- monitoring_dashboard.Monitor.draw_quick_commands
+- monitoring_dashboard.Monitor.draw_services_section
+- monitoring_dashboard.Monitor.draw_tests_section
+- monitoring_dashboard.Monitor.get_container_stats
+- monitoring_dashboard.Monitor.get_container_status
+- monitoring_dashboard.Monitor.get_recent_test_results
+- monitoring_dashboard.Monitor.run
+- monitoring_dashboard.main
+- run_tests.main
+- setup_script.error
+- setup_script.info
+- setup_script.success
+- setup_script.warning

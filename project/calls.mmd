@@ -1,0 +1,33 @@
+flowchart LR
+%% generated in 0.00s
+    subgraph automation__automation_cli
+        automation__automation_cli__main["main"]
+        automation__automation_cli__create_sample_config["create_sample_config"]
+    end
+    subgraph automation__live_monitor
+        automation__live_monitor__clear_logs["clear_logs"]
+        automation__live_monitor__capture_vnc_screenshot["capture_vnc_screenshot"]
+        automation__live_monitor__disconnect_vnc["disconnect_vnc"]
+        automation__live_monitor__add_log["add_log"]
+        automation__live_monitor__connect_vnc["connect_vnc"]
+        automation__live_monitor__execute_all["execute_all"]
+        automation__live_monitor__execute_step["execute_step"]
+        automation__live_monitor__screenshot_worker["screenshot_worker"]
+        automation__live_monitor__load_scenario["load_scenario"]
+        automation__live_monitor__load_scenario_api["load_scenario_api"]
+    end
+    subgraph automation__run_scenario
+        automation__run_scenario__main["main"]
+        automation__run_scenario__run_scenario["run_scenario"]
+        automation__run_scenario__load_scenario["load_scenario"]
+    end
+    automation__live_monitor__screenshot_worker --> automation__live_monitor__capture_vnc_screenshot
+    automation__live_monitor__load_scenario_api --> automation__live_monitor__load_scenario
+    automation__live_monitor__connect_vnc --> automation__live_monitor__add_log
+    automation__live_monitor__disconnect_vnc --> automation__live_monitor__add_log
+    automation__live_monitor__clear_logs --> automation__live_monitor__add_log
+    automation__live_monitor__execute_step --> automation__live_monitor__add_log
+    automation__live_monitor__execute_all --> automation__live_monitor__add_log
+    automation__automation_cli__main --> automation__automation_cli__create_sample_config
+    automation__run_scenario__run_scenario --> automation__run_scenario__load_scenario
+    automation__run_scenario__main --> automation__run_scenario__run_scenario

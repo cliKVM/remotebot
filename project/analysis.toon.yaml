@@ -1,0 +1,163 @@
+# code2llm | 31f 8911L | yaml:14,python:8,shell:3,txt:2,yml:1 | 2026-07-05
+# generated in 0.01s
+# CC̅=4.1 | critical:2/92 | dups:0 | cycles:0
+
+HEALTH[2]:
+  🟡 CC    execute_dsl CC=62 (limit:15)
+  🟡 CC    run_scenario CC=21 (limit:15)
+
+REFACTOR[1]:
+  1. split 2 high-CC methods  (CC>15)
+
+PIPELINES[74]:
+  [1] Src [main]: main
+      PURITY: 100% pure
+  [2] Src [__init__]: __init__
+      PURITY: 100% pure
+  [3] Src [clear_screen]: clear_screen
+      PURITY: 100% pure
+  [4] Src [get_container_stats]: get_container_stats
+      PURITY: 100% pure
+  [5] Src [get_container_status]: get_container_status
+      PURITY: 100% pure
+  [6] Src [check_vnc_port]: check_vnc_port
+      PURITY: 100% pure
+  [7] Src [check_novnc_port]: check_novnc_port
+      PURITY: 100% pure
+  [8] Src [check_ollama_api]: check_ollama_api
+      PURITY: 100% pure
+  [9] Src [get_recent_test_results]: get_recent_test_results
+      PURITY: 100% pure
+  [10] Src [draw_header]: draw_header
+      PURITY: 100% pure
+  [11] Src [draw_container_section]: draw_container_section
+      PURITY: 100% pure
+  [12] Src [draw_services_section]: draw_services_section
+      PURITY: 100% pure
+  [13] Src [draw_tests_section]: draw_tests_section
+      PURITY: 100% pure
+  [14] Src [draw_quick_commands]: draw_quick_commands
+      PURITY: 100% pure
+  [15] Src [draw_footer]: draw_footer
+      PURITY: 100% pure
+  [16] Src [display]: display
+      PURITY: 100% pure
+  [17] Src [run]: run
+      PURITY: 100% pure
+  [18] Src [main]: main
+      PURITY: 100% pure
+  [19] Src [screenshot_to_cv]: screenshot_to_cv
+      PURITY: 100% pure
+  [20] Src [detect_edges]: detect_edges
+      PURITY: 100% pure
+  [21] Src [detect_rectangles]: detect_rectangles
+      PURITY: 100% pure
+  [22] Src [find_window_center]: find_window_center
+      PURITY: 100% pure
+  [23] Src [detect_buttons]: detect_buttons
+      PURITY: 100% pure
+  [24] Src [find_text_field]: find_text_field
+      PURITY: 100% pure
+  [25] Src [template_match]: template_match
+      PURITY: 100% pure
+  [26] Src [detect_dialog_box]: detect_dialog_box
+      PURITY: 100% pure
+  [27] Src [find_unlock_button]: find_unlock_button
+      PURITY: 100% pure
+  [28] Src [is_screen_blank]: is_screen_blank
+      PURITY: 100% pure
+  [29] Src [get_screen_diagnostics]: get_screen_diagnostics
+      PURITY: 100% pure
+  [30] Src [quick_analysis]: quick_analysis
+      PURITY: 100% pure
+  [31] Src [screenshot_worker]: screenshot_worker → capture_vnc_screenshot
+      PURITY: 100% pure
+  [32] Src [index]: index
+      PURITY: 100% pure
+  [33] Src [list_scenarios]: list_scenarios
+      PURITY: 100% pure
+  [34] Src [load_scenario_api]: load_scenario_api → load_scenario
+      PURITY: 100% pure
+  [35] Src [get_steps]: get_steps
+      PURITY: 100% pure
+  [36] Src [connect_vnc]: connect_vnc → add_log
+      PURITY: 100% pure
+  [37] Src [disconnect_vnc]: disconnect_vnc → add_log
+      PURITY: 100% pure
+  [38] Src [get_screenshot]: get_screenshot
+      PURITY: 100% pure
+  [39] Src [video_feed]: video_feed
+      PURITY: 100% pure
+  [40] Src [get_status]: get_status
+      PURITY: 100% pure
+  [41] Src [get_logs]: get_logs
+      PURITY: 100% pure
+  [42] Src [clear_logs]: clear_logs → add_log
+      PURITY: 100% pure
+  [43] Src [download_logs]: download_logs
+      PURITY: 100% pure
+  [44] Src [execute_step]: execute_step → add_log
+      PURITY: 100% pure
+  [45] Src [execute_all]: execute_all → add_log
+      PURITY: 100% pure
+  [46] Src [encode_image]: encode_image
+      PURITY: 100% pure
+  [47] Src [analyze_screen]: analyze_screen
+      PURITY: 100% pure
+  [48] Src [find_element]: find_element
+      PURITY: 100% pure
+  [49] Src [__init__]: __init__
+      PURITY: 100% pure
+  [50] Src [connect]: connect
+      PURITY: 100% pure
+
+LAYERS:
+  automation/                     CC̄=4.6    ←in:0  →out:0
+  │ !! live_monitor              1170L  0C   18m  CC=11     ←0
+  │ !! remote_automation          766L  3C   19m  CC=62     ←0
+  │ cv_detection               416L  1C   14m  CC=7      ←0
+  │ automation_cli             280L  0C    6m  CC=14     ←0
+  │ config.yaml                252L  0C    0m  CC=0.0    ←0
+  │ screen_recorder            236L  2C   10m  CC=6      ←0
+  │ !! run_scenario               210L  0C    3m  CC=21     ←0
+  │
+  ./                              CC̄=2.5    ←in:0  →out:0
+  │ !! Makefile                   550L  0C    0m  CC=0.0    ←0
+  │ !! planfile.yaml              526L  0C    0m  CC=0.0    ←0
+  │ setup_script.sh            435L  0C    4m  CC=0.0    ←0
+  │ monitoring_dashboard       297L  2C   17m  CC=9      ←0
+  │ cicd_integration.txt       269L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml         113L  0C    0m  CC=0.0    ←0
+  │ prefact.yaml                94L  0C    0m  CC=0.0    ←0
+  │ project.sh                  69L  0C    0m  CC=0.0    ←0
+  │ run_tests                   32L  0C    1m  CC=4      ←0
+  │ requirements.txt            19L  0C    0m  CC=0.0    ←0
+  │ tree.sh                      4L  0C    0m  CC=0.0    ←0
+  │
+  controller/                     CC̄=0.0    ←in:0  →out:0
+  │ Dockerfile                  68L  0C    0m  CC=0.0    ←0
+  │
+  vnc/                            CC̄=0.0    ←in:0  →out:0
+  │ Dockerfile                 154L  0C    0m  CC=0.0    ←0
+  │
+  test_scenarios/                 CC̄=0.0    ←in:0  →out:0
+  │ !! ai_driven_tests.yaml       660L  0C    0m  CC=0.0    ←0
+  │ !! advanced.yaml              649L  0C    0m  CC=0.0    ←0
+  │ !! ai_hybrid_tests.yaml       614L  0C    0m  CC=0.0    ←0
+  │ auto_login.yaml            386L  0C    0m  CC=0.0    ←0
+  │ cv_speed_test.yaml         222L  0C    0m  CC=0.0    ←0
+  │ diagnostics.yaml           177L  0C    0m  CC=0.0    ←0
+  │ test_firefox_simple.yaml   102L  0C    0m  CC=0.0    ←0
+  │ test_basic.yaml             74L  0C    0m  CC=0.0    ←0
+  │ quick_test.yaml             17L  0C    0m  CC=0.0    ←0
+  │
+  testql-scenarios/               CC̄=0.0    ←in:0  →out:0
+  │ generated-api-smoke.testql.toon.yaml    40L  0C    0m  CC=0.0    ←0
+  │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0
+  │
+
+COUPLING: no cross-package imports detected
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon

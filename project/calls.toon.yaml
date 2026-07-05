@@ -1,0 +1,68 @@
+# code2llm call graph | /home/tom/github/cliKVM/remotebot
+# generated in 0.01s
+# nodes: 15 | edges: 10 | modules: 3
+# CC̄=4.1
+
+HUBS[20]:
+  automation.run_scenario.run_scenario
+    CC=21  in:1  out:47  total:48
+  automation.live_monitor.execute_step
+    CC=11  in:0  out:38  total:38
+  automation.live_monitor.execute_all
+    CC=6  in:0  out:30  total:30
+  automation.live_monitor.add_log
+    CC=2  in:21  out:6  total:27
+  automation.automation_cli.main
+    CC=14  in:0  out:22  total:22
+  automation.live_monitor.capture_vnc_screenshot
+    CC=5  in:3  out:13  total:16
+  automation.run_scenario.main
+    CC=5  in:0  out:16  total:16
+  automation.live_monitor.connect_vnc
+    CC=3  in:0  out:15  total:15
+  automation.live_monitor.load_scenario
+    CC=2  in:1  out:5  total:6
+  automation.live_monitor.disconnect_vnc
+    CC=3  in:0  out:5  total:5
+  automation.live_monitor.load_scenario_api
+    CC=2  in:0  out:5  total:5
+  automation.live_monitor.clear_logs
+    CC=1  in:0  out:4  total:4
+  automation.automation_cli.create_sample_config
+    CC=1  in:1  out:3  total:4
+  automation.run_scenario.load_scenario
+    CC=1  in:2  out:2  total:4
+  automation.live_monitor.screenshot_worker
+    CC=4  in:0  out:2  total:2
+
+MODULES:
+  automation.automation_cli  [2 funcs]
+    create_sample_config  CC=1  out:3
+    main  CC=14  out:22
+  automation.live_monitor  [10 funcs]
+    add_log  CC=2  out:6
+    capture_vnc_screenshot  CC=5  out:13
+    clear_logs  CC=1  out:4
+    connect_vnc  CC=3  out:15
+    disconnect_vnc  CC=3  out:5
+    execute_all  CC=6  out:30
+    execute_step  CC=11  out:38
+    load_scenario  CC=2  out:5
+    load_scenario_api  CC=2  out:5
+    screenshot_worker  CC=4  out:2
+  automation.run_scenario  [3 funcs]
+    load_scenario  CC=1  out:2
+    main  CC=5  out:16
+    run_scenario  CC=21  out:47
+
+EDGES:
+  automation.live_monitor.screenshot_worker → automation.live_monitor.capture_vnc_screenshot
+  automation.live_monitor.load_scenario_api → automation.live_monitor.load_scenario
+  automation.live_monitor.connect_vnc → automation.live_monitor.add_log
+  automation.live_monitor.disconnect_vnc → automation.live_monitor.add_log
+  automation.live_monitor.clear_logs → automation.live_monitor.add_log
+  automation.live_monitor.execute_step → automation.live_monitor.add_log
+  automation.live_monitor.execute_all → automation.live_monitor.add_log
+  automation.automation_cli.main → automation.automation_cli.create_sample_config
+  automation.run_scenario.run_scenario → automation.run_scenario.load_scenario
+  automation.run_scenario.main → automation.run_scenario.run_scenario

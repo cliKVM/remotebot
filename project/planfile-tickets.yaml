@@ -1,0 +1,197 @@
+source: code2llm
+# generated in 0.01s
+schema: code2llm.planfile_tickets.v1
+project_root: /home/tom/github/cliKVM/remotebot
+tickets:
+- signal: code2llm_cc
+  title: 'Reduce cyclomatic complexity: automation.remote_automation.AutomationEngine.execute_dsl
+    (CC=62)'
+  description: 'code2llm reports `automation.remote_automation.AutomationEngine.execute_dsl`
+    at `automation/remote_automation.py:386` with cyclomatic complexity 62 (limit
+    15).
+
+
+    Extract smaller functions, flatten conditionals, or split strategy branches. Re-run
+    code2llm after the change and keep tests green.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - complexity
+  - refactor
+  files:
+  - automation/remote_automation.py
+  dedupe_key: code2llm:cc:automation/remote_automation.py:automation.remote_automation.AutomationEngine.execute_dsl
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: timestamp'
+  description: 'code2llm reports `Shotgun Surgery: timestamp` in `automation/live_monitor.py:299`.
+
+
+    Mutation of variable ''timestamp'' spans 6 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - automation/live_monitor.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:automation/live_monitor.py:299:Shotgun
+    Surgery: timestamp'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: vision'
+  description: 'code2llm reports `Shotgun Surgery: vision` in `automation/automation_cli.py:37`.
+
+
+    Mutation of variable ''vision'' spans 5 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - automation/automation_cli.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:automation/automation_cli.py:37:Shotgun
+    Surgery: vision'
+- signal: code2llm_cc
+  title: 'Reduce cyclomatic complexity: automation.run_scenario.run_scenario (CC=21)'
+  description: 'code2llm reports `automation.run_scenario.run_scenario` at `automation/run_scenario.py:25`
+    with cyclomatic complexity 21 (limit 15).
+
+
+    Extract smaller functions, flatten conditionals, or split strategy branches. Re-run
+    code2llm after the change and keep tests green.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - complexity
+  - refactor
+  files:
+  - automation/run_scenario.py
+  dedupe_key: code2llm:cc:automation/run_scenario.py:automation.run_scenario.run_scenario
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: disconnect'
+  description: 'code2llm reports `God Function: disconnect` in `automation/remote_automation.py:285`.
+
+
+    Function ''disconnect'' is oversized: CC=13, fan-out=8, mutations=0.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/remote_automation.py
+  dedupe_key: 'code2llm:smell:god_function:automation/remote_automation.py:285:God
+    Function: disconnect'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: execute_all'
+  description: 'code2llm reports `God Function: execute_all` in `automation/live_monitor.py:401`.
+
+
+    Function ''execute_all'' is oversized: CC=6, fan-out=17, mutations=2.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/live_monitor.py
+  dedupe_key: 'code2llm:smell:god_function:automation/live_monitor.py:401:God Function:
+    execute_all'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: execute_step'
+  description: 'code2llm reports `God Function: execute_step` in `automation/live_monitor.py:318`.
+
+
+    Function ''execute_step'' is oversized: CC=11, fan-out=15, mutations=8.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/live_monitor.py
+  dedupe_key: 'code2llm:smell:god_function:automation/live_monitor.py:318:God Function:
+    execute_step'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: main'
+  description: 'code2llm reports `God Function: main` in `automation/automation_cli.py:181`.
+
+
+    Function ''main'' is oversized: CC=14, fan-out=13, mutations=10.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/automation_cli.py
+  dedupe_key: 'code2llm:smell:god_function:automation/automation_cli.py:181:God Function:
+    main'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: main'
+  description: 'code2llm reports `God Function: main` in `automation/run_scenario.py:150`.
+
+
+    Function ''main'' is oversized: CC=5, fan-out=9, mutations=11.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/run_scenario.py
+  dedupe_key: 'code2llm:smell:god_function:automation/run_scenario.py:150:God Function:
+    main'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: run_scenario'
+  description: 'code2llm reports `God Function: run_scenario` in `automation/automation_cli.py:37`.
+
+
+    Function ''run_scenario'' is oversized: CC=11, fan-out=16, mutations=8.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - automation/automation_cli.py
+  dedupe_key: 'code2llm:smell:god_function:automation/automation_cli.py:37:God Function:
+    run_scenario'
+applied: []
+skipped: []

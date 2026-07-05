@@ -1,0 +1,85 @@
+# remotebot | 14f 5102L | python:10,shell:3,less:1 | 2026-07-05
+# stats: 33 func | 10 cls | 14 mod | CC̄=4.2 | critical:4 | cycles:0
+# alerts[5]: CC run_scenario=21; CC main=14; CC run_scenario=11; CC execute_step=11; CC interactive_mode=9
+# hotspots[5]: execute_all fan=15; main fan=13; execute_step fan=13; run_scenario fan=13; run_scenario fan=12
+# evolution: baseline
+# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
+M[14]:
+  app.doql.less,732
+  automation/automation_cli.py,281
+  automation/cv_detection.py,417
+  automation/live_monitor.py,1171
+  automation/quick_test.py,47
+  automation/remote_automation.py,767
+  automation/run_scenario.py,211
+  automation/screen_recorder.py,237
+  monitoring_dashboard.py,298
+  project.sh,69
+  run_tests.py,33
+  setup_script.sh,436
+  test_suite.py,398
+  tree.sh,5
+D:
+  automation/automation_cli.py:
+    e: load_config,list_scenarios,run_scenario,interactive_mode,create_sample_config,main
+    load_config(config_file)
+    list_scenarios(config)
+    run_scenario(config;scenario_name;dry_run)
+    interactive_mode(config)
+    create_sample_config()
+    main()
+  automation/cv_detection.py:
+    e: CVDetector
+    CVDetector: __init__(0),set_debug(1),screenshot_to_cv(1),detect_edges(3),detect_rectangles(2),find_window_center(1),detect_buttons(1),find_text_field(1),template_match(3),detect_dialog_box(1),find_unlock_button(1),is_screen_blank(2),get_screen_diagnostics(1),quick_analysis(1)  # Computer Vision detector dla automatyzacji
+  automation/live_monitor.py:
+    e: add_log,load_scenario,capture_vnc_screenshot,screenshot_worker,index,list_scenarios,load_scenario_api,get_steps,connect_vnc,disconnect_vnc,get_screenshot,video_feed,get_status,get_logs,clear_logs,download_logs,execute_step,execute_all
+    add_log(level;message)
+    load_scenario(yaml_path;scenario_name)
+    capture_vnc_screenshot()
+    screenshot_worker()
+    index()
+    list_scenarios()
+    load_scenario_api(yaml_file;scenario_name)
+    get_steps()
+    connect_vnc()
+    disconnect_vnc()
+    get_screenshot()
+    video_feed()
+    get_status()
+    get_logs()
+    clear_logs()
+    download_logs()
+    execute_step(step_index)
+    execute_all()
+  automation/quick_test.py:
+    e: main
+    main()
+  automation/remote_automation.py:
+    e: main,OllamaVision,RemoteController,AutomationEngine
+    OllamaVision: __init__(2),encode_image(1),analyze_screen(2),find_element(2)  # Integracja z Ollama do analizy obrazu
+    RemoteController: __init__(3),connect(0),_connect_vnc(0),_connect_rdp(0),_connect_spice(0),click(2),type_text(1),key_press(1),capture_screen(0),disconnect(0)  # Kontroler dla zdalnych połączeń
+    AutomationEngine: __init__(4),log(2),save_screenshot(2),execute_dsl(2)  # Silnik automatyzacji z DSL
+    main()
+  automation/run_scenario.py:
+    e: load_scenario,run_scenario,main
+    load_scenario(scenario_file)
+    run_scenario(scenario_file;scenario_name;enable_recording;debug_mode)
+    main()
+  automation/screen_recorder.py:
+    e: record_test,ScreenRecorder,RecordingContext
+    ScreenRecorder: __init__(4),start_recording(3),_recording_loop(0),stop_recording(0),_pil_to_opencv(1),add_text_overlay(3)  # Nagrywa ekran podczas testów automatyzacji
+    RecordingContext: __init__(3),__enter__(0),__exit__(3)  # Context manager dla wygodnego nagrywania
+    record_test(scenario_name;capture_func;output_dir)
+  monitoring_dashboard.py:
+    e: main,Colors,Monitor
+    Colors:
+    Monitor: __init__(0),clear_screen(0),get_container_stats(1),get_container_status(1),check_vnc_port(0),check_novnc_port(0),check_ollama_api(0),get_recent_test_results(0),draw_header(0),draw_container_section(0),draw_services_section(0),draw_tests_section(0),draw_quick_commands(0),draw_footer(0),display(0),run(1)
+    main()
+  run_tests.py:
+    e: main
+    main()
+  test_suite.py:
+    e: main,Colors,TestRunner
+    Colors:
+    TestRunner: __init__(0),info(1),success(1),error(1),warning(1),run_command(2),test_docker_running(0),test_containers_running(0),test_vnc_port(0),test_novnc_port(0),test_ollama_api(0),test_ollama_model(0),test_vnc_connection(0),test_automation_simple(0),test_desktop_screenshot(0),test_ollama_vision(0),run_all_tests(0)
+    main()

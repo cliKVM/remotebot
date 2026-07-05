@@ -1,0 +1,63 @@
+# code2llm/evolution | 92 func | 9f | 2026-07-05
+# generated in 0.00s
+
+NEXT[5] (ranked by impact):
+  [1] !! SPLIT           automation/remote_automation.py
+      WHY: 766L, 3 classes, max CC=62
+      EFFORT: ~4h  IMPACT: 47492
+
+  [2] !! SPLIT           automation/live_monitor.py
+      WHY: 1170L, 0 classes, max CC=11
+      EFFORT: ~4h  IMPACT: 12870
+
+  [3] !! SPLIT-FUNC      AutomationEngine.execute_dsl  CC=62  fan=36
+      WHY: CC=62 exceeds 15
+      EFFORT: ~1h  IMPACT: 2232
+
+  [4] !  SPLIT-FUNC      run_scenario  CC=21  fan=16
+      WHY: CC=21 exceeds 15
+      EFFORT: ~1h  IMPACT: 336
+
+  [5] !! SPLIT           test_scenarios/ai_driven_tests.yaml
+      WHY: 660L, 0 classes, max CC=0
+      EFFORT: ~4h  IMPACT: 0
+
+
+RISKS[3]:
+  ⚠ Splitting automation/live_monitor.py may break 18 import paths
+  ⚠ Splitting automation/remote_automation.py may break 19 import paths
+  ⚠ Splitting test_scenarios/ai_driven_tests.yaml may break 0 import paths
+
+METRICS-TARGET:
+  CC̄:          4.1 → ≤2.9
+  max-CC:      62 → ≤20
+  god-modules: 7 → 0
+  high-CC(≥15): 2 → ≤1
+  hub-types:   0 → ≤0
+
+PATTERNS (language parser shared logic):
+  _extract_declarations() in base.py — unified extraction for:
+    - TypeScript: interfaces, types, classes, functions, arrow funcs
+    - PHP: namespaces, traits, classes, functions, includes
+    - Ruby: modules, classes, methods, requires
+    - C++: classes, structs, functions, #includes
+    - C#: classes, interfaces, methods, usings
+    - Java: classes, interfaces, methods, imports
+    - Go: packages, functions, structs
+    - Rust: modules, functions, traits, use statements
+
+  Shared regex patterns per language:
+    - import: language-specific import/require/using patterns
+    - class: class/struct/trait declarations with inheritance
+    - function: function/method signatures with visibility
+    - brace_tracking: for C-family languages ({ })
+    - end_keyword_tracking: for Ruby (module/class/def...end)
+
+  Benefits:
+    - Consistent extraction logic across all languages
+    - Reduced code duplication (~70% reduction in parser LOC)
+    - Easier maintenance: fix once, apply everywhere
+    - Standardized FunctionInfo/ClassInfo models
+
+HISTORY:
+  prev CC̄=4.1 → now CC̄=4.1

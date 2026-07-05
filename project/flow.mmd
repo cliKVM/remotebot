@@ -1,0 +1,35 @@
+flowchart TD
+%% generated in 0.00s
+
+    %% Entry points (blue)
+    classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
+
+    subgraph CLI
+        automation__automation_cli__load_config["load_config"]
+        automation__automation_cli__list_scenarios["list_scenarios"]
+        automation__automation_cli__run_scenario["run_scenario"]
+        automation__automation_cli__interactive_mode["interactive_mode"]
+        automation__automation_cli__create_sample_config["create_sample_config"]
+        automation__automation_cli__main["main"]
+    end
+
+    subgraph Core
+        setup_script__info["info"]
+        setup_script__success["success"]
+        setup_script__warning["warning"]
+        setup_script__error["error"]
+        monitoring_dashboard__Monitor__clear_screen["clear_screen"]
+        monitoring_dashboard__Monitor__get_container_stats["get_container_stats"]
+        monitoring_dashboard__Monitor__get_container_status["get_container_status"]
+        monitoring_dashboard__Monitor__check_vnc_port["check_vnc_port"]
+        monitoring_dashboard__Monitor__check_novnc_port["check_novnc_port"]
+        monitoring_dashboard__Monitor__check_ollama_api["check_ollama_api"]
+        monitoring_dashboard__Monitor__get_recent_test_results["get_recent_test_results"]
+        monitoring_dashboard__Monitor__draw_header["draw_header"]
+        monitoring_dashboard__Monitor__draw_container_section["draw_container_section"]
+        monitoring_dashboard__Monitor__draw_services_section["draw_services_section"]
+        monitoring_dashboard__Monitor__draw_tests_section["draw_tests_section"]
+        ...["+59 more"]
+    end
+
+    class setup_script__info,setup_script__success,setup_script__warning,setup_script__error,monitoring_dashboard__Monitor__clear_screen,monitoring_dashboard__Monitor__get_container_stats,monitoring_dashboard__Monitor__get_container_status,monitoring_dashboard__Monitor__check_vnc_port,monitoring_dashboard__Monitor__check_novnc_port,monitoring_dashboard__Monitor__check_ollama_api entry

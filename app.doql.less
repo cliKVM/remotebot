@@ -1,0 +1,731 @@
+// LESS format — define @variables here as needed
+
+app {
+  name: remotebot;
+  version: 0.1.0;
+}
+
+interface[type="api"] {
+  type: rest;
+  framework: flask;
+}
+
+workflow[name="setup"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Przygotowywanie środowiska...$(NC)";
+  step-2: run cmd=chmod +x setup.sh;
+  step-3: run cmd=./setup.sh;
+  step-4: run cmd=echo "$(GREEN)✓ Setup zakończony$(NC)";
+}
+
+workflow[name="build"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Budowanie obrazów Docker z cache...$(NC)";
+  step-2: run cmd=DOCKER_BUILDKIT=1 docker-compose build;
+  step-3: run cmd=echo "$(GREEN)✓ Obrazy zbudowane$(NC)";
+}
+
+workflow[name="build-no-cache"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Budowanie obrazów Docker bez cache...$(NC)";
+  step-2: run cmd=DOCKER_BUILDKIT=1 docker-compose build --no-cache;
+  step-3: run cmd=echo "$(GREEN)✓ Obrazy zbudowane$(NC)";
+}
+
+workflow[name="up"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Uruchamianie usług...$(NC)";
+  step-2: run cmd=docker-compose up -d;
+  step-3: run cmd=echo "$(GREEN)✓ Usługi uruchomione$(NC)";
+  step-4: run cmd=echo "";
+  step-5: run cmd=echo "$(YELLOW)Poczekaj 30-60 sekund na pełne uruchomienie$(NC)";
+  step-6: run cmd=echo "";
+  step-7: run cmd=$(MAKE) --no-print-directory info;
+}
+
+workflow[name="start"] {
+  trigger: manual;
+  step-1: depend target=up;
+}
+
+workflow[name="down"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Zatrzymywanie usług...$(NC)";
+  step-2: run cmd=docker-compose down;
+  step-3: run cmd=echo "$(GREEN)✓ Usługi zatrzymane$(NC)";
+}
+
+workflow[name="stop"] {
+  trigger: manual;
+  step-1: depend target=down;
+}
+
+workflow[name="restart"] {
+  trigger: manual;
+  step-1: depend target=down;
+  step-2: depend target=up;
+}
+
+workflow[name="logs"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose logs -f;
+}
+
+workflow[name="logs-vnc"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose logs -f vnc-desktop;
+}
+
+workflow[name="logs-ollama"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose logs -f ollama;
+}
+
+workflow[name="logs-controller"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose logs -f automation-controller;
+}
+
+workflow[name="shell"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose exec automation-controller /bin/bash;
+}
+
+workflow[name="shell-vnc"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose exec vnc-desktop /bin/bash;
+}
+
+workflow[name="test"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Uruchamianie testów...$(NC)";
+  step-2: run cmd=python3 run_tests.py;
+}
+
+workflow[name="test-wait"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Uruchamianie testów z czekaniem...$(NC)";
+  step-2: run cmd=python3 run_tests.py --wait;
+}
+
+workflow[name="test-basic"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test podstawowy...$(NC)";
+  step-2: run cmd=echo "$(YELLOW)⚠️  Ten test używa AI (Ollama) - może zająć 30-120s$(NC)";
+  step-3: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_basic.yaml test_connection;
+}
+
+workflow[name="test-quick"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Szybki test połączenia (5s)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/quick_test.yaml quick_connection_test --no-recording;
+}
+
+workflow[name="test-firefox"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test Firefox...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_basic.yaml test_firefox;
+}
+
+workflow[name="test-firefox-simple"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test Firefox (simple)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_firefox_simple.yaml test_firefox_simple --no-recording;
+}
+
+workflow[name="test-firefox-ai"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test Firefox (AI)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_firefox_simple.yaml test_firefox_ai;
+}
+
+workflow[name="test-firefox-ai-debug"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test Firefox AI (debug)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_firefox_simple.yaml test_firefox_ai --debug --no-recording;
+}
+
+workflow[name="test-debug"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Debug ekranu (AI Vision)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_firefox_simple.yaml test_debug_screen --debug --no-recording;
+}
+
+workflow[name="test-debug-screenshots"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Debug screenshotów (co 1s)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_firefox_simple.yaml test_debug_screenshots --no-recording;
+  step-3: run cmd=echo "$(GREEN)✓ Screenshoty zapisane w: results/screenshots/$(NC)";
+}
+
+workflow[name="test-ai-adaptive"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Adaptacyjna nawigacja...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml adaptive_firefox_navigation --no-recording;
+}
+
+workflow[name="test-ai-search"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Smart search...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml smart_search_and_select --no-recording;
+}
+
+workflow[name="test-ai-desktop-mapper"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Desktop mapper...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml desktop_mapper --no-recording;
+}
+
+workflow[name="test-ai-monitor"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Application state monitor...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml application_state_monitor --no-recording;
+}
+
+workflow[name="test-ai-editor"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Text editing + validation...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml intelligent_text_editing --no-recording;
+}
+
+workflow[name="test-ai-files"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: File navigation...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml smart_file_navigation --no-recording;
+}
+
+workflow[name="test-ai-forms"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Form interaction...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml smart_form_interaction --no-recording;
+}
+
+workflow[name="test-ai-errors"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Error detection...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml intelligent_error_detection --no-recording;
+}
+
+workflow[name="test-ai-windows"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Multi-window management...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml window_management_test --no-recording;
+}
+
+workflow[name="test-ai-visual"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Visual regression...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml visual_change_detection --no-recording;
+}
+
+workflow[name="test-ai-performance"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Performance monitor...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml ai_performance_monitor --no-recording;
+}
+
+workflow[name="test-ai-ui"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: UI validation...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml ui_validation_test --no-recording;
+}
+
+workflow[name="test-ai-commands"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)AI Test: Command output analysis...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml command_output_analysis --no-recording;
+}
+
+workflow[name="test-ai-all"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(YELLOW)⚠️  Uruchamianie wszystkich testów AI - to może zająć 10-30 minut!$(NC)";
+  step-2: run cmd=$(MAKE) --no-print-directory test-ai-adaptive;
+  step-3: run cmd=$(MAKE) --no-print-directory test-ai-desktop-mapper;
+  step-4: run cmd=$(MAKE) --no-print-directory test-ai-monitor;
+  step-5: run cmd=$(MAKE) --no-print-directory test-ai-editor;
+  step-6: run cmd=$(MAKE) --no-print-directory test-ai-files;
+  step-7: run cmd=$(MAKE) --no-print-directory test-ai-errors;
+  step-8: run cmd=$(MAKE) --no-print-directory test-ai-windows;
+  step-9: run cmd=$(MAKE) --no-print-directory test-ai-visual;
+  step-10: run cmd=$(MAKE) --no-print-directory test-ai-performance;
+  step-11: run cmd=$(MAKE) --no-print-directory test-ai-ui;
+  step-12: run cmd=$(MAKE) --no-print-directory test-ai-commands;
+  step-13: run cmd=echo "$(GREEN)✓ Wszystkie testy AI zakończone!$(NC)";
+}
+
+workflow[name="list-ai-tests"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne testy AI:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_driven_tests.yaml dummy --list || true;
+}
+
+workflow[name="test-hybrid-performance"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Terminal performance...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml terminal_performance_analysis --no-recording;
+}
+
+workflow[name="test-hybrid-desktop"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Desktop analysis...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml desktop_visual_analysis --no-recording;
+}
+
+workflow[name="test-hybrid-firefox"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Firefox analysis...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml firefox_simple_analysis --no-recording;
+}
+
+workflow[name="test-hybrid-editor"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Text editor...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml text_editor_validation --no-recording;
+}
+
+workflow[name="test-hybrid-state"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: State monitoring...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml system_state_comparison --no-recording;
+}
+
+workflow[name="test-hybrid-errors"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Error analysis...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml error_message_analysis --no-recording;
+}
+
+workflow[name="test-hybrid-commands"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Command parsing...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml command_parsing_test --no-recording;
+}
+
+workflow[name="test-hybrid-accessibility"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Accessibility...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml ui_accessibility_test --no-recording;
+}
+
+workflow[name="test-hybrid-windows"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Hybrid Test: Window stress...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml window_stress_test --no-recording;
+}
+
+workflow[name="test-hybrid-all"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(YELLOW)⚠️  Uruchamianie wszystkich hybrid testów - może zająć 10-20 minut!$(NC)";
+  step-2: run cmd=$(MAKE) --no-print-directory test-hybrid-performance;
+  step-3: run cmd=$(MAKE) --no-print-directory test-hybrid-desktop;
+  step-4: run cmd=$(MAKE) --no-print-directory test-hybrid-firefox;
+  step-5: run cmd=$(MAKE) --no-print-directory test-hybrid-editor;
+  step-6: run cmd=$(MAKE) --no-print-directory test-hybrid-state;
+  step-7: run cmd=$(MAKE) --no-print-directory test-hybrid-errors;
+  step-8: run cmd=$(MAKE) --no-print-directory test-hybrid-commands;
+  step-9: run cmd=$(MAKE) --no-print-directory test-hybrid-accessibility;
+  step-10: run cmd=$(MAKE) --no-print-directory test-hybrid-windows;
+  step-11: run cmd=echo "$(GREEN)✓ Wszystkie hybrid testy zakończone!$(NC)";
+}
+
+workflow[name="list-hybrid-tests"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne hybrid testy:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/ai_hybrid_tests.yaml dummy --list || true;
+}
+
+workflow[name="test-auto-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: Smart detection (AI - slow)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml smart_login_detection --no-recording;
+}
+
+workflow[name="test-auto-login-cv"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: CV Fast (milliseconds)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml cv_fast_login --no-recording;
+}
+
+workflow[name="test-auto-login-retry"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: With retry...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml advanced_login_with_retry --no-recording;
+}
+
+workflow[name="test-system-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: System login...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml system_user_login --no-recording;
+}
+
+workflow[name="test-app-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: Application login...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml application_login_handler --no-recording;
+}
+
+workflow[name="test-password-manager"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: Smart password manager...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml smart_password_manager --no-recording;
+}
+
+workflow[name="test-multi-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Auto Login: Multi-stage login...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml multi_stage_login --no-recording;
+}
+
+workflow[name="list-auto-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne testy auto-login:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/auto_login.yaml dummy --list || true;
+}
+
+workflow[name="test-cv-speed"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)CV Test: Fast detection (milliseconds)...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/cv_speed_test.yaml cv_fast_detection --no-recording;
+}
+
+workflow[name="test-cv-unlock"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)CV Test: Fast unlock...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/cv_speed_test.yaml cv_fast_unlock --no-recording;
+}
+
+workflow[name="test-cv-auto-login"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)CV Test: Auto-login complete...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/cv_speed_test.yaml cv_auto_login_complete --no-recording;
+}
+
+workflow[name="test-cv-vs-ai"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Speed Benchmark: CV vs AI...$(NC)";
+  step-2: run cmd=echo "$(YELLOW)⚠️  This will take ~1min (AI is slow)$(NC)";
+  step-3: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/cv_speed_test.yaml speed_benchmark --no-recording;
+}
+
+workflow[name="list-cv-tests"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne testy CV:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/cv_speed_test.yaml dummy --list || true;
+}
+
+workflow[name="test-diag-screen"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: Screen check...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml screen_diagnostics --no-recording;
+}
+
+workflow[name="test-diag-vnc"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: VNC connection check...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml vnc_connection_check --no-recording;
+}
+
+workflow[name="test-diag-lock"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: Lock screen detection...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml lock_screen_detection --no-recording;
+}
+
+workflow[name="test-diag-ready"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: Desktop ready check...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml desktop_ready_check --no-recording;
+}
+
+workflow[name="test-diag-full"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: Full system check...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml full_system_check --no-recording;
+}
+
+workflow[name="test-diag-recovery"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Diagnostics: Auto-recovery...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml auto_recovery --no-recording;
+}
+
+workflow[name="list-diag-tests"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne testy diagnostyczne:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/diagnostics.yaml dummy --list || true;
+}
+
+workflow[name="live-monitor"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Starting Live Automation Monitor...$(NC)";
+  step-2: run cmd=echo "$(GREEN)📺 Open: http://localhost:5000$(NC)";
+  step-3: run cmd=echo "";
+  step-4: run cmd=docker-compose exec -T automation-controller python3 /app/live_monitor.py;
+}
+
+workflow[name="test-terminal"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test terminala...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_basic.yaml test_terminal;
+}
+
+workflow[name="test-no-recording"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Test bez nagrywania...$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_basic.yaml test_connection --no-recording;
+}
+
+workflow[name="list-scenarios"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne scenariusze:$(NC)";
+  step-2: run cmd=docker-compose exec automation-controller python3 /app/run_scenario.py /app/test_scenarios/test_basic.yaml dummy --list || true;
+}
+
+workflow[name="interactive"] {
+  trigger: manual;
+  step-1: run cmd=docker-compose exec automation-controller python3 automation_cli.py test_scenarios/test_basic.yaml --interactive;
+}
+
+workflow[name="status"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Status usług:$(NC)";
+  step-2: run cmd=docker-compose ps;
+  step-3: run cmd=echo "";
+  step-4: run cmd=echo "$(BLUE)Testy połączeń:$(NC)";
+  step-5: run cmd=echo -n "VNC (5901): ";
+  step-6: run cmd=nc -z -w2 localhost 5901 && echo "$(GREEN)✓ Działa$(NC)" || echo "$(RED)✗ Nie działa$(NC)";
+  step-7: run cmd=echo -n "noVNC (6080): ";
+  step-8: run cmd=nc -z -w2 localhost 6080 && echo "$(GREEN)✓ Działa$(NC)" || echo "$(RED)✗ Nie działa$(NC)";
+  step-9: run cmd=echo -n "Ollama (11434): ";
+  step-10: run cmd=nc -z -w2 localhost 11434 && echo "$(GREEN)✓ Działa$(NC)" || echo "$(RED)✗ Nie działa$(NC)";
+}
+
+workflow[name="info"] {
+  trigger: manual;
+  step-1: run cmd=echo "";
+  step-2: run cmd=echo "$(GREEN)═══════════════════════════════════════════$(NC)";
+  step-3: run cmd=echo "$(GREEN)  Remote Automation Environment$(NC)";
+  step-4: run cmd=echo "$(GREEN)═══════════════════════════════════════════$(NC)";
+  step-5: run cmd=echo "";
+  step-6: run cmd=echo "$(YELLOW)📺 VNC Desktop:$(NC)";
+  step-7: run cmd=echo "   VNC Client: localhost:5901 (hasło: automation)";
+  step-8: run cmd=echo "   Przeglądarka: $(BLUE)http://localhost:6080/vnc.html$(NC)";
+  step-9: run cmd=echo "";
+  step-10: run cmd=echo "$(YELLOW)🤖 Ollama API:$(NC)";
+  step-11: run cmd=echo "   URL: $(BLUE)http://localhost:11434$(NC)";
+  step-12: run cmd=echo "";
+  step-13: run cmd=echo "$(YELLOW)📊 Portainer:$(NC)";
+  step-14: run cmd=echo "   URL: $(BLUE)http://localhost:9000$(NC)";
+  step-15: run cmd=echo "";
+  step-16: run cmd=echo "$(YELLOW)🧪 Szybkie testy:$(NC)";
+  step-17: run cmd=echo "   make test-quick          - Szybki test (BEZ AI, 5s)";
+  step-18: run cmd=echo "   make test-debug          - Debug ekranu (co widzi AI)";
+  step-19: run cmd=echo "   make test-debug-screenshots - Screenshoty co 1s (5s)";
+  step-20: run cmd=echo "   make test-firefox-simple - Firefox (BEZ AI)";
+  step-21: run cmd=echo "   make test-firefox-ai-debug - Firefox AI + screenshoty";
+  step-22: run cmd=echo "   make test-basic          - Podstawowy test (z AI, 30-60s)";
+  step-23: run cmd=echo "   make test                - Pełny test suite";
+  step-24: run cmd=echo "";
+  step-25: run cmd=echo "$(YELLOW)🤖 Testy AI-Driven:$(NC)";
+  step-26: run cmd=echo "   make list-ai-tests       - Lista wszystkich testów AI";
+  step-27: run cmd=echo "   make test-ai-adaptive    - Adaptacyjna nawigacja Firefox";
+  step-28: run cmd=echo "   make test-ai-desktop-mapper - AI mapuje pulpit";
+  step-29: run cmd=echo "   make test-ai-monitor     - Monitor stanu aplikacji";
+  step-30: run cmd=echo "   make test-ai-editor      - Inteligentna edycja tekstu";
+  step-31: run cmd=echo "   make test-ai-errors      - Detekcja i diagnoza błędów";
+  step-32: run cmd=echo "   make test-ai-performance - Monitoring wydajności systemu";
+  step-33: run cmd=echo "   make test-ai-all         - Wszystkie testy AI (10-30min)";
+  step-34: run cmd=echo "";
+  step-35: run cmd=echo "$(YELLOW)🔀 Testy Hybrid (AI + Niezawodne akcje):$(NC)";
+  step-36: run cmd=echo "   make list-hybrid-tests   - Lista hybrid testów";
+  step-37: run cmd=echo "   make test-hybrid-performance - Terminal performance";
+  step-38: run cmd=echo "   make test-hybrid-desktop - Analiza pulpitu";
+  step-39: run cmd=echo "   make test-hybrid-errors  - Analiza błędów";
+  step-40: run cmd=echo "   make test-hybrid-commands - Parsing komend";
+  step-41: run cmd=echo "   make test-hybrid-all     - Wszystkie hybrid (10-20min)";
+  step-42: run cmd=echo "";
+  step-43: run cmd=echo "$(YELLOW)🔐 Auto-Login (Wykrywanie i wypełnianie):$(NC)";
+  step-44: run cmd=echo "   make list-auto-login     - Lista testów logowania";
+  step-45: run cmd=echo "   make test-auto-login-cv  - CV Fast login (milisekundy!) ⚡";
+  step-46: run cmd=echo "   make test-auto-login     - AI detection (wolne ~60s)";
+  step-47: run cmd=echo "   make test-system-login   - Logowanie do systemu";
+  step-48: run cmd=echo "   make test-app-login      - Logowanie do aplikacji";
+  step-49: run cmd=echo "   make test-password-manager - Smart password manager";
+  step-50: run cmd=echo "   make test-multi-login    - Multi-stage login";
+  step-51: run cmd=echo "";
+  step-52: run cmd=echo "$(YELLOW)⚡ CV Detection (100x szybsze niż AI!):$(NC)";
+  step-53: run cmd=echo "   make list-cv-tests       - Lista testów CV";
+  step-54: run cmd=echo "   make test-cv-speed       - Fast detection (milisekundy!)";
+  step-55: run cmd=echo "   make test-cv-unlock      - Fast unlock screen";
+  step-56: run cmd=echo "   make test-cv-auto-login  - Complete auto-login (super fast)";
+  step-57: run cmd=echo "   make test-cv-vs-ai       - Speed benchmark: CV vs AI";
+  step-58: run cmd=echo "";
+  step-59: run cmd=echo "$(YELLOW)🔍 Diagnostics (Sprawdzanie problemów):$(NC)";
+  step-60: run cmd=echo "   make list-diag-tests     - Lista testów diagnostycznych";
+  step-61: run cmd=echo "   make test-diag-screen    - Sprawdź stan ekranu";
+  step-62: run cmd=echo "   make test-diag-vnc       - Sprawdź połączenie VNC";
+  step-63: run cmd=echo "   make test-diag-lock      - Wykryj lock screen";
+  step-64: run cmd=echo "   make test-diag-ready     - Czy desktop gotowy?";
+  step-65: run cmd=echo "   make test-diag-full      - Pełne sprawdzenie (CV+AI)";
+  step-66: run cmd=echo "   make test-diag-recovery  - Auto-recovery (odblokuj)";
+  step-67: run cmd=echo "";
+  step-68: run cmd=echo "$(YELLOW)🎬 Live Monitor (Web Interface):$(NC)";
+  step-69: run cmd=echo "   make live-monitor        - Uruchom web monitoring (http://localhost:5000)";
+  step-70: run cmd=echo "   Features: Live VNC preview + step list + real-time updates";
+  step-71: run cmd=echo "";
+  step-72: run cmd=echo "$(YELLOW)🎬 Nagrania testów:$(NC)";
+  step-73: run cmd=echo "   Lokalizacja: $(BLUE)results/videos/$(NC)";
+  step-74: run cmd=echo "   Format: MP4 (10 fps)";
+  step-75: run cmd=echo "";
+  step-76: run cmd=echo "$(YELLOW)📚 Więcej komend:$(NC)";
+  step-77: run cmd=echo "   make help          - Pełna lista komend";
+  step-78: run cmd=echo "";
+}
+
+workflow[name="vnc"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Otwieranie VNC w przeglądarce...$(NC)";
+  step-2: run cmd=command -v xdg-open >/dev/null 2>&1 && xdg-open http://localhost:6080/vnc.html || open http://localhost:6080/vnc.html;
+}
+
+workflow[name="ps"] {
+  trigger: manual;
+  step-1: depend target=status;
+}
+
+workflow[name="pull-model"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Pobieranie modelu llava:7b...$(NC)";
+  step-2: run cmd=docker-compose exec ollama ollama pull llava:7b;
+  step-3: run cmd=echo "$(GREEN)✓ Model pobrany$(NC)";
+}
+
+workflow[name="pull-model-small"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Pobieranie modelu moondream...$(NC)";
+  step-2: run cmd=docker-compose exec ollama ollama pull moondream;
+  step-3: run cmd=echo "$(GREEN)✓ Model pobrany$(NC)";
+}
+
+workflow[name="list-models"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Zainstalowane modele:$(NC)";
+  step-2: run cmd=docker-compose exec ollama ollama list;
+}
+
+workflow[name="clean"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Usuwanie kontenerów...$(NC)";
+  step-2: run cmd=docker-compose down;
+  step-3: run cmd=echo "$(GREEN)✓ Kontenery usunięte$(NC)";
+}
+
+workflow[name="clean-all"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(RED)Usuwanie wszystkiego (włącznie z danymi)...$(NC)";
+  step-2: run cmd=read -p "Czy na pewno? [y/N] " -n 1 -r; \;
+  step-3: run cmd=echo; \;
+  step-4: run cmd=if [[ $$REPLY =~ ^[Yy]$$ ]]; then \;
+  step-5: run cmd=docker-compose down -v --rmi local; \;
+  step-6: run cmd=echo "$(GREEN)✓ Wszystko usunięte$(NC)"; \;
+  step-7: run cmd=else \;
+  step-8: run cmd=echo "$(YELLOW)Anulowano$(NC)"; \;
+  step-9: run cmd=fi;
+}
+
+workflow[name="clean-cache"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Usuwanie cache Docker...$(NC)";
+  step-2: run cmd=docker volume rm -f remote-automation_pip-cache remote-automation_apt-cache 2>/dev/null || true;
+  step-3: run cmd=docker builder prune -f;
+  step-4: run cmd=echo "$(GREEN)✓ Cache usunięty$(NC)";
+}
+
+workflow[name="volumes"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Status volumes:$(NC)";
+  step-2: run cmd=echo "";
+  step-3: run cmd=echo "$(YELLOW)Ollama modele:$(NC)";
+  step-4: run cmd=docker volume inspect remote-automation_ollama-data --format="Size: {{.Options}}" 2>/dev/null || echo "  Brak volume";
+  step-5: run cmd=echo "";
+  step-6: run cmd=echo "$(YELLOW)Cache volumes:$(NC)";
+  step-7: run cmd=docker volume ls | grep remote-automation || echo "  Brak cache volumes";
+}
+
+workflow[name="models"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Zainstalowane modele Ollama:$(NC)";
+  step-2: run cmd=docker-compose exec ollama ollama list 2>/dev/null || echo "Ollama nie działa";
+}
+
+workflow[name="backup-results"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Tworzenie backup wyników...$(NC)";
+  step-2: run cmd=mkdir -p backups;
+  step-3: run cmd=tar -czf backups/results-$$(date +%Y%m%d-%H%M%S).tar.gz results/;
+  step-4: run cmd=echo "$(GREEN)✓ Backup utworzony$(NC)";
+}
+
+workflow[name="backup-models"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Tworzenie backup modeli Ollama...$(NC)";
+  step-2: run cmd=mkdir -p backups;
+  step-3: run cmd=docker run --rm -v remote-automation_ollama-data:/data -v $$(pwd)/backups:/backup alpine tar czf /backup/ollama-models-$$(date +%Y%m%d-%H%M%S).tar.gz -C /data .;
+  step-4: run cmd=echo "$(GREEN)✓ Backup modeli utworzony$(NC)";
+}
+
+workflow[name="restore-models"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Dostępne backupy modeli:$(NC)";
+  step-2: run cmd=ls -la backups/ollama-models-*.tar.gz 2>/dev/null || echo "Brak backupów modeli";
+  step-3: run cmd=echo "";
+  step-4: run cmd=echo "$(YELLOW)Aby przywrócić, użyj: docker run --rm -v remote-automation_ollama-data:/data -v \$$(pwd)/backups:/backup alpine tar xzf /backup/NAZWA_PLIKU.tar.gz -C /data$(NC)";
+}
+
+workflow[name="install-deps"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Instalowanie zależności...$(NC)";
+  step-2: run cmd=pip3 install pillow requests pynput PyYAML vncdotool pytest;
+  step-3: run cmd=echo "$(GREEN)✓ Zależności zainstalowane$(NC)";
+}
+
+workflow[name="check-docker"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(BLUE)Sprawdzanie Docker...$(NC)";
+  step-2: run cmd=docker --version && echo "$(GREEN)✓ Docker OK$(NC)" || echo "$(RED)✗ Docker nie znaleziony$(NC)";
+  step-3: run cmd=docker-compose --version 2>/dev/null && echo "$(GREEN)✓ Docker Compose OK$(NC)" || \;
+  step-4: run cmd=(docker compose version >/dev/null 2>&1 && echo "$(GREEN)✓ Docker Compose (plugin) OK$(NC)" || echo "$(RED)✗ Docker Compose nie znaleziony$(NC)");
+}
+
+workflow[name="dev"] {
+  trigger: manual;
+  step-1: depend target=up;
+  step-2: depend target=test-wait;
+}
+
+workflow[name="quick"] {
+  trigger: manual;
+  step-1: run cmd=$(MAKE) --no-print-directory up;
+  step-2: run cmd=sleep 5;
+  step-3: run cmd=$(MAKE) --no-print-directory info;
+}
+
+tests {
+  import: testql-scenarios/**/*.testql.toon.yaml;
+}
+
+env_vars {
+  keys: VNC_PASSWORD, VNC_GEOMETRY, VNC_DEPTH, VNC_PORT, NO_VNC_PORT, DISPLAY, OLLAMA_PORT, OLLAMA_MODEL, OLLAMA_NUM_PARALLEL, OLLAMA_MAX_LOADED_MODELS, OLLAMA_NUM_CTX, OLLAMA_REQUEST_TIMEOUT, LOG_LEVEL, RESULTS_DIR, LOGS_DIR, SHARED_DIR, VNC_CONNECT_TIMEOUT, DEFAULT_ACTION_DELAY, PORTAINER_PORT, ENABLE_PORTAINER, COMPOSE_PROJECT_NAME, DOCKER_NETWORK_SUBNET, VNC_MEMORY_LIMIT, OLLAMA_MEMORY_LIMIT, CONTROLLER_MEMORY_LIMIT, VNC_CPU_LIMIT, OLLAMA_CPU_LIMIT, CONTROLLER_CPU_LIMIT, DEBUG_MODE, SAVE_SCREENSHOTS, SCREENSHOTS_DIR, AUTO_RESTART, VNC_USER, VNC_UID, VNC_GID, VNC_LOCALHOST_ONLY, VNC_HOST, OLLAMA_HOST, AUTO_BACKUP, BACKUP_DIR, TZ, CUSTOM_STARTUP_SCRIPT, CUSTOM_SCENARIOS_DIR, OLLAMA_AUTO_PULL_MODELS, OLLAMA_EXTRA_MODELS, HEALTHCHECK_INTERVAL, HEALTHCHECK_TIMEOUT, HEALTHCHECK_RETRIES, TEST_TIMEOUT, MAX_PARALLEL_TESTS, GENERATE_HTML_REPORT, ENABLE_EXPERIMENTAL, ENABLE_GPU;
+}
+
+deploy {
+  target: docker-compose;
+  compose_file: docker-compose.yml;
+}
+
+environment[name="local"] {
+  runtime: docker-compose;
+  env_file: .env;
+  vars: AUTO_BACKUP, AUTO_RESTART, BACKUP_DIR, COMPOSE_PROJECT_NAME, CONTROLLER_CPU_LIMIT, CONTROLLER_MEMORY_LIMIT, CUSTOM_SCENARIOS_DIR, CUSTOM_STARTUP_SCRIPT, DEBUG_MODE, DEFAULT_ACTION_DELAY, DISPLAY, DOCKER_NETWORK_SUBNET, ENABLE_EXPERIMENTAL, ENABLE_GPU, ENABLE_PORTAINER, GENERATE_HTML_REPORT, HEALTHCHECK_INTERVAL, HEALTHCHECK_RETRIES, HEALTHCHECK_TIMEOUT, LOGS_DIR, LOG_LEVEL, MAX_PARALLEL_TESTS, NO_VNC_PORT, OLLAMA_AUTO_PULL_MODELS, OLLAMA_CPU_LIMIT, OLLAMA_EXTRA_MODELS, OLLAMA_HOST, OLLAMA_MAX_LOADED_MODELS, OLLAMA_MEMORY_LIMIT, OLLAMA_MODEL, OLLAMA_NUM_CTX, OLLAMA_NUM_PARALLEL, OLLAMA_PORT, OLLAMA_REQUEST_TIMEOUT, PORTAINER_PORT, RESULTS_DIR, SAVE_SCREENSHOTS, SCREENSHOTS_DIR, SHARED_DIR, TEST_TIMEOUT, TZ, VNC_CONNECT_TIMEOUT, VNC_CPU_LIMIT, VNC_DEPTH, VNC_GEOMETRY, VNC_GID, VNC_HOST, VNC_LOCALHOST_ONLY, VNC_MEMORY_LIMIT, VNC_PASSWORD, VNC_PORT, VNC_UID, VNC_USER;
+  runtime_ollama: OLLAMA_AUTO_PULL_MODELS, OLLAMA_CPU_LIMIT, OLLAMA_EXTRA_MODELS, OLLAMA_HOST, OLLAMA_MAX_LOADED_MODELS, OLLAMA_MEMORY_LIMIT, OLLAMA_MODEL, OLLAMA_NUM_CTX, OLLAMA_NUM_PARALLEL, OLLAMA_PORT, OLLAMA_REQUEST_TIMEOUT;
+}

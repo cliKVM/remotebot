@@ -1,0 +1,135 @@
+flowchart TD
+%% generated in 0.00s
+    subgraph automation__automation_cli
+        automation__automation_cli__load_config["load_config"]
+        automation__automation_cli__list_scenarios["list_scenarios"]
+        automation__automation_cli__run_scenario("run_scenario CC=11")
+        automation__automation_cli__interactive_mode("interactive_mode CC=9")
+        automation__automation_cli__create_sample_config["create_sample_config"]
+        automation__automation_cli__main("main CC=14")
+    end
+    subgraph automation__cv_detection
+        automation__cv_detection__CVDetector____init__["__init__"]
+        automation__cv_detection__CVDetector__set_debug["set_debug"]
+        automation__cv_detection__CVDetector__screenshot_to_cv["screenshot_to_cv"]
+        automation__cv_detection__CVDetector__detect_edges["detect_edges"]
+        automation__cv_detection__CVDetector__detect_rectangles["detect_rectangles"]
+        automation__cv_detection__CVDetector__find_window_center["find_window_center"]
+        automation__cv_detection__CVDetector__detect_buttons["detect_buttons"]
+        automation__cv_detection__CVDetector__find_text_field["find_text_field"]
+        automation__cv_detection__CVDetector__template_match["template_match"]
+        automation__cv_detection__CVDetector__detect_dialog_box["detect_dialog_box"]
+        automation__cv_detection__CVDetector__find_unlock_button["find_unlock_button"]
+        automation__cv_detection__CVDetector__is_screen_blank["is_screen_blank"]
+        automation__cv_detection__CVDetector__get_screen_diagnostics["get_screen_diagnostics"]
+        automation__cv_detection__CVDetector__quick_analysis["quick_analysis"]
+    end
+    subgraph automation__live_monitor
+        automation__live_monitor__add_log["add_log"]
+        automation__live_monitor__load_scenario["load_scenario"]
+        automation__live_monitor__capture_vnc_screenshot["capture_vnc_screenshot"]
+        automation__live_monitor__screenshot_worker["screenshot_worker"]
+        automation__live_monitor__index["index"]
+        automation__live_monitor__list_scenarios["list_scenarios"]
+        automation__live_monitor__load_scenario_api["load_scenario_api"]
+        automation__live_monitor__get_steps["get_steps"]
+        automation__live_monitor__connect_vnc["connect_vnc"]
+        automation__live_monitor__disconnect_vnc["disconnect_vnc"]
+        automation__live_monitor__get_screenshot["get_screenshot"]
+        automation__live_monitor__video_feed["video_feed"]
+        automation__live_monitor__get_status["get_status"]
+        automation__live_monitor__get_logs["get_logs"]
+        automation__live_monitor__clear_logs["clear_logs"]
+        automation__live_monitor__download_logs["download_logs"]
+        automation__live_monitor__execute_step("execute_step CC=11")
+        automation__live_monitor__execute_all["execute_all"]
+    end
+    subgraph automation__remote_automation
+        automation__remote_automation__OllamaVision____init__["__init__"]
+        automation__remote_automation__OllamaVision__encode_image["encode_image"]
+        automation__remote_automation__OllamaVision__analyze_screen["analyze_screen"]
+        automation__remote_automation__OllamaVision__find_element["find_element"]
+        automation__remote_automation__RemoteController____init__["__init__"]
+        automation__remote_automation__RemoteController__connect["connect"]
+        automation__remote_automation__RemoteController___connect_vnc["_connect_vnc"]
+        automation__remote_automation__RemoteController___connect_rdp["_connect_rdp"]
+        automation__remote_automation__RemoteController___connect_spice["_connect_spice"]
+        automation__remote_automation__RemoteController__click["click"]
+        automation__remote_automation__RemoteController__type_text["type_text"]
+        automation__remote_automation__RemoteController__key_press["key_press"]
+        automation__remote_automation__RemoteController__capture_screen["capture_screen"]
+        automation__remote_automation__RemoteController__disconnect("disconnect CC=13")
+        automation__remote_automation__AutomationEngine____init__["__init__"]
+        automation__remote_automation__AutomationEngine__log["log"]
+        automation__remote_automation__AutomationEngine__save_screenshot["save_screenshot"]
+        automation__remote_automation__AutomationEngine__execute_dsl{{execute_dsl CC=62}}
+        automation__remote_automation__main["main"]
+    end
+    subgraph automation__run_scenario
+        automation__run_scenario__load_scenario["load_scenario"]
+        automation__run_scenario__run_scenario{{run_scenario CC=21}}
+        automation__run_scenario__main["main"]
+    end
+    subgraph automation__screen_recorder
+        automation__screen_recorder__ScreenRecorder____init__["__init__"]
+        automation__screen_recorder__ScreenRecorder__start_recording["start_recording"]
+        automation__screen_recorder__ScreenRecorder___recording_loop["_recording_loop"]
+        automation__screen_recorder__ScreenRecorder__stop_recording["stop_recording"]
+        automation__screen_recorder__ScreenRecorder___pil_to_opencv["_pil_to_opencv"]
+        automation__screen_recorder__ScreenRecorder__add_text_overlay["add_text_overlay"]
+        automation__screen_recorder__RecordingContext____init__["__init__"]
+        automation__screen_recorder__RecordingContext____enter__["__enter__"]
+        automation__screen_recorder__RecordingContext____exit__["__exit__"]
+        automation__screen_recorder__record_test["record_test"]
+    end
+    subgraph monitoring_dashboard
+        monitoring_dashboard__main["main"]
+    end
+    subgraph monitoring_dashboard__Monitor
+        monitoring_dashboard__Monitor____init__["__init__"]
+        monitoring_dashboard__Monitor__clear_screen["clear_screen"]
+        monitoring_dashboard__Monitor__get_container_stats["get_container_stats"]
+        monitoring_dashboard__Monitor__get_container_status["get_container_status"]
+        monitoring_dashboard__Monitor__check_vnc_port["check_vnc_port"]
+        monitoring_dashboard__Monitor__check_novnc_port["check_novnc_port"]
+        monitoring_dashboard__Monitor__check_ollama_api["check_ollama_api"]
+        monitoring_dashboard__Monitor__get_recent_test_results["get_recent_test_results"]
+        monitoring_dashboard__Monitor__draw_header["draw_header"]
+        monitoring_dashboard__Monitor__draw_container_section["draw_container_section"]
+        monitoring_dashboard__Monitor__draw_services_section("draw_services_section CC=9")
+        monitoring_dashboard__Monitor__draw_tests_section["draw_tests_section"]
+        monitoring_dashboard__Monitor__draw_quick_commands["draw_quick_commands"]
+        monitoring_dashboard__Monitor__draw_footer["draw_footer"]
+        monitoring_dashboard__Monitor__display["display"]
+        monitoring_dashboard__Monitor__run["run"]
+    end
+    subgraph run_tests
+        run_tests__main["main"]
+    end
+    subgraph setup_script
+        setup_script__info["info"]
+        setup_script__success["success"]
+        setup_script__warning["warning"]
+        setup_script__error["error"]
+    end
+    automation__live_monitor__screenshot_worker --> automation__live_monitor__capture_vnc_screenshot
+    automation__live_monitor__load_scenario_api --> automation__live_monitor__load_scenario
+    automation__live_monitor__connect_vnc --> automation__live_monitor__add_log
+    automation__live_monitor__disconnect_vnc --> automation__live_monitor__add_log
+    automation__live_monitor__clear_logs --> automation__live_monitor__add_log
+    automation__live_monitor__execute_step --> automation__live_monitor__add_log
+    automation__live_monitor__execute_step --> automation__live_monitor__capture_vnc_screenshot
+    automation__live_monitor__execute_all --> automation__live_monitor__add_log
+    automation__automation_cli__interactive_mode --> automation__automation_cli__list_scenarios
+    automation__automation_cli__interactive_mode --> automation__automation_cli__run_scenario
+    automation__automation_cli__main --> automation__automation_cli__create_sample_config
+    automation__automation_cli__main --> automation__automation_cli__load_config
+    automation__automation_cli__main --> automation__automation_cli__list_scenarios
+    automation__run_scenario__run_scenario --> automation__run_scenario__load_scenario
+    automation__run_scenario__main --> automation__run_scenario__run_scenario
+    automation__run_scenario__main --> automation__run_scenario__load_scenario
+
+    classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
+    class automation__remote_automation__AutomationEngine__execute_dsl,automation__run_scenario__run_scenario highCC
+    class monitoring_dashboard__Monitor__draw_services_section,automation__live_monitor__execute_step,automation__remote_automation__RemoteController__disconnect,automation__automation_cli__run_scenario,automation__automation_cli__interactive_mode,automation__automation_cli__main medCC

@@ -1,0 +1,55 @@
+# remotebot | 92 func | 9f | 8911L | yaml | 2026-07-05
+# generated in 0.00s
+
+HEALTH:
+  CC̄=4.1  critical=6 (limit:10)  dup=0  cycles=0
+
+ALERTS[10]:
+  !!! cc_exceeded      AutomationEngine.execute_dsl = 62 (limit:15)
+  !!! high_fan_out     AutomationEngine.execute_dsl = 36 (limit:10)
+  !!  cc_exceeded      run_scenario = 21 (limit:15)
+  !!  high_fan_out     execute_all = 17 (limit:10)
+  !!  high_fan_out     run_scenario = 16 (limit:10)
+  !!  high_fan_out     run_scenario = 16 (limit:10)
+  !!  high_fan_out     execute_step = 15 (limit:10)
+  !   high_fan_out     main = 13 (limit:10)
+  !   high_fan_out     list_scenarios = 10 (limit:10)
+  !   high_fan_out     ScreenRecorder.start_recording = 10 (limit:10)
+
+MODULES[31] (top by size):
+  M[automation/live_monitor.py] 1170L C:0 F:18 CC↑11 D:0 (python)
+  M[automation/remote_automation.py] 766L C:3 F:19 CC↑62 D:0 (python)
+  M[test_scenarios/ai_driven_tests.yaml] 660L C:0 F:0 CC↑0 D:0 (yaml)
+  M[test_scenarios/advanced.yaml] 649L C:0 F:0 CC↑0 D:0 (yaml)
+  M[test_scenarios/ai_hybrid_tests.yaml] 614L C:0 F:0 CC↑0 D:0 (yaml)
+  M[Makefile] 550L C:0 F:0 CC↑0 D:0 ()
+  M[planfile.yaml] 526L C:0 F:0 CC↑0 D:0 (yaml)
+  M[setup_script.sh] 435L C:0 F:4 CC↑0 D:0 (shell)
+  M[automation/cv_detection.py] 416L C:1 F:14 CC↑7 D:0 (python)
+  M[test_scenarios/auto_login.yaml] 386L C:0 F:0 CC↑0 D:0 (yaml)
+  M[monitoring_dashboard.py] 297L C:2 F:17 CC↑9 D:0 (python)
+  M[automation/automation_cli.py] 280L C:0 F:6 CC↑14 D:0 (python)
+  M[cicd_integration.txt] 269L C:0 F:0 CC↑0 D:0 (txt)
+  M[automation/config.yaml] 252L C:0 F:0 CC↑0 D:0 (yaml)
+  M[automation/screen_recorder.py] 236L C:2 F:10 CC↑6 D:0 (python)
+  LANGS: yaml:14/python:8/other:3/shell:3/txt:2/yml:1
+
+HOTSPOTS[8]:
+  ★ AutomationEngine.execute_dsl fan=36  // Wykonuje skrypt DSL
+  ★ execute_all fan=17  // Execute all steps in scenario
+  ★ run_scenario fan=16  // Uruchamia wybrany scenariusz
+  ★ run_scenario fan=16  // Uruchom scenariusz testowy
+
+Args:
+    scenario_file: Ścieżka do pliku YAML ze sc
+  ★ execute_step fan=15  // Execute specific step
+
+REFACTOR[12]:
+  [1] H/L Split AutomationEngine.execute_dsl (CC=62)
+  [2] H/H Split god module automation/remote_automation.py (766L, 3 classes)
+  [3] H/H Split god module automation/live_monitor.py (1170L, 0 classes)
+  [4] H/H Split god module Makefile (550L, 0 classes)
+  [5] H/H Split god module planfile.yaml (526L, 0 classes)
+
+EVOLUTION:
+  2026-07-05 CC̄=4.1 crit=6 8911L // Automated analysis

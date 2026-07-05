@@ -1,6 +1,23 @@
 .idea
 venv
 
+.llm
+.code2llm_cache
+managed_components
+.gui-agent.pid
+.gui-server.pid
+.gui-server.log
+gui-server/app_old.py
+gui-server/app.py.bak
+gui-server/index_old.html
+gui-server/index.html.bak
+gui-server/logs/
+gui-agent/logs/
+logs/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
 # Remote Automation - .gitignore
 
 # Python
