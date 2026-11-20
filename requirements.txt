@@ -1,19 +1,19 @@
 # Core dependencies for remote automation
-pillow>=10.0.0
-requests>=2.31.0
-PyYAML>=6.0
-vncdotool>=1.2.0
+pillow>=10.4.0
+requests>=2.34.2
+PyYAML>=6.0.3
+vncdotool>=1.4.2
 
 # Testing framework
-pytest>=7.0.0
-pytest-html>=3.1.0
+pytest>=7.4.4
+pytest-html>=3.2.0
 
 # Video recording for test scenarios
-opencv-python>=4.8.0
-numpy>=1.21.0
+opencv-python>=4.14.0.94
+numpy>=1.26.4
 
 # Live monitoring web interface
-flask>=2.3.0
+flask>=2.3.3
 
 # Optional - only for local development with GUI
 # pynput>=1.7.6  # Not needed in Docker containers
